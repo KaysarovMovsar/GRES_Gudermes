@@ -2,42 +2,27 @@ const {Telegraf, Markup} = require('telegraf')
 const {message} = require('telegraf/filters')
 require('dotenv').config()
 const text = require('./const')
+const keyboards = require('./keyboards')
+const { Keyboard, Key } = require('telegram-keyboard')
+
+
+
 
 const bot = new Telegraf(process.env.BOT_TOKEN)
 
-const start_Menu = bot.command('start', async (ctx) => {
+bot.command('start', async (ctx) => {
     try {
-        await ctx.replyWithHTML(
+         await ctx.replyWithHTML(
             `<b>Привет ${ctx.from.first_name
                 ? ctx.from.first_name
                 : "пользователь"} что вам подсказать 👇</b>`,
-            Markup.inlineKeyboard([
-                [
-                    Markup
-                        .button
-                        .callback('Контакты', 'contacts_panel'),
-                    Markup
-                        .button
-                        .callback('Способы оплаты', 'payment_option')
-                ],
-                [
-                    Markup
-                        .button
-                        .callback('Наш телеграмм', 'our_telegramm'),
-                    Markup
-                        .button
-                        .callback('Информация', 'info_gas')
-                ]
-            ])
-        )
+            keyboards.keyboard)
     } catch (error) {
         console.log(error)
     }
 })
 
-bot.action('contacts_panel', async(ctx) => {
-    try {
-        await ctx.answerCbQuery()
+bot.hears('Контакты', async(ctx) => {
         await ctx.replyWithHTML(`
         ⚡️Гудермесские ГЭС⚡️
 
@@ -54,88 +39,79 @@ bot.action('contacts_panel', async(ctx) => {
 
 ☎️ Телефон диспетчера:
 
-📬 Официальный канал в Телеграмм - https://t.me/gudermesGES`, Markup.inlineKeyboard([[Markup.button.callback('⬅️ Меню', 'back_to_menu')]]))
-    } catch (error) {
-        console.log(error)
-    }
+📬 Официальный канал в Телеграмм - https://t.me/gudermesGES`, Keyboard.make([
+    ['⬅️ Меню']
+]).reply())
 })
 
-bot.action('payment_option', async(ctx) =>{
-    try {
-        await ctx.answerCbQuery()
-        await ctx.replyWithHTML(`
+bot.hears('Способы оплаты', async(ctx) =>{
+
+    await ctx.reply(`
 ✅ В любом кассе АО "Чеченэнерго"
 
 ✅ В приложении вашего банка
 
-✅ В официальном приложении для телефона👇`, Markup.inlineKeyboard([
-            [Markup.button.url('Программа для apple', 'https://clicks.su/9alOLV')],
-            [Markup.button.url('Программа для android', 'https://clicks.su/y5Bkvd')],
-            [Markup.button.callback('⬅️ Меню', 'back_to_menu')]
-        ]))
-    } catch (error) {
-        console.log(error)
-    }
-})
+✅ В официальном приложении для телефона👇`, {
+        reply_markup: {
+            inline_keyboard: [
+                [
+                    { text: 'Программа для apple', url: 'https://clicks.su/9alOLV' },
+                    { text: 'Программа для android', url: 'https://clicks.su/y5Bkvd' },
+                ],
+                [
+                    { text: '⬅️ Меню', callback_data: 'back_to_menu' }
+                ]
+            ]
+        }
+    });
+});
 
 bot.action('back_to_menu', (async ctx =>{
     try {
-         await ctx.answerCbQuery()
+        await ctx.answerCbQuery()
+        await ctx.replyWithHTML(
+           `<b>Привет ${ctx.from.first_name
+               ? ctx.from.first_name
+               : "пользователь"} что вам подсказать 👇</b>`,
+           keyboards.keyboard)
+   } catch (error) {
+       console.log(error)
+   }
+}))
+
+
+bot.hears('⬅️ Меню', async (ctx) => {
+    try {
          await ctx.replyWithHTML(
             `<b>Привет ${ctx.from.first_name
                 ? ctx.from.first_name
                 : "пользователь"} что вам подсказать 👇</b>`,
-            Markup.inlineKeyboard([
-                [
-                    Markup
-                        .button
-                        .callback('Контакты', 'contacts_panel'),
-                    Markup
-                        .button
-                        .callback('Способы оплаты', 'payment_option')
-                ],
-                [
-                    Markup
-                        .button
-                        .callback('Наш телеграмм', 'our_telegramm'),
-                    Markup
-                        .button
-                        .callback('Информация', 'info_gas')
-                ]
-            ])
-        )
-    } catch (error) {
-        console.log(error)
-    }
-}))
-
-
-bot.action('our_telegramm', async(ctx) => {
-    try {
-        await ctx.answerCbQuery()
-        await ctx.replyWithHTML(`Официальный канал в Телеграмм - https://t.me/gudermesGES`)
+            keyboards.keyboard)
     } catch (error) {
         console.log(error)
     }
 })
 
-bot.action('info_gas', async(ctx) =>{
-    try {
-        await ctx.answerCbQuery()
-        await ctx.replyWithHTML(`Основные сведения по:`, Markup.inlineKeyboard([
-            [Markup.button.callback('Тариф', 'gas_rate')],
-            [Markup.button.url('Как снять показания с умного счетчика?', 'https://dzen.ru/a/ZEYncicD6CfJx6B5')],
-            [Markup.button.callback('Как зарегистрироваться в приложении?', 'registration')],
-            [Markup.button.callback('⬅️ Меню', 'back_to_menu')]
-        ]))
-    } catch (error) {
-        console.log(error)
-    }
+
+
+bot.hears('Наш телеграмм', async(ctx) => {
+        await ctx.replyWithHTML(`Официальный канал в Телеграмм - https://t.me/gudermesGES`, 
+        Keyboard.make([['⬅️ Меню']]).reply())
 })
 
-bot.action('gas_rate', async(ctx) => {
-    try {
-        await ctx.answerCbQuery()
+bot.hears('Информация', async(ctx) =>{
+
+        await ctx.replyWithHTML(`Основные сведения по:`, Keyboard.make([
+            ['Тариф'],
+            ['Как снять показания с умного счетчика?'],
+            ['Как зарегистрироваться в приложении?'],
+            ['⬅️ Меню']
+        ]).reply())
+    
+})
+
+bot.hears('Тариф', async(ctx) => {
+    
         await ctx.replyWithHTML(`
 Коммерция - уточняйте в ГЭС
 ~7,26 - НН  
@@ -143,10 +119,7 @@ bot.action('gas_rate', async(ctx) => {
 
 Население  
 3,36 - город  
-2,35 - село`, Markup.inlineKeyboard([[Markup.button.callback('⬅️ Меню', 'back_to_menu')]]))
-    } catch (error) {
-        console.log(error)
-    }
+2,35 - село`, Keyboard.make([['⬅️ Меню']]).reply())
 })
     
 
