@@ -11,6 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "api-bot": "^0.0.1",
     "dotenv": "^16.3.1",
     "hide-virtual-keyboard": "^1.0.1",
     "telegraf": "^4.15.0",
