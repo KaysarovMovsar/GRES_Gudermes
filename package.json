@@ -14,6 +14,7 @@
     "api-bot": "^0.0.1",
     "dotenv": "^16.3.1",
     "hide-virtual-keyboard": "^1.0.1",
+    "node-telegram-bot-api": "^0.64.0",
     "telegraf": "^4.15.0",
     "telegram-keyboard": "^2.3.3"
   },

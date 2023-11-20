@@ -6,12 +6,11 @@ const keyboards = require('./keyboards')
 const { Keyboard, Key } = require('telegram-keyboard')
 
 
-
 const bot = new Telegraf(process.env.BOT_TOKEN)
 
-bot.command('start', async (ctx) => {
+bot.command('start', (ctx) => {
     try {
-      const message = await ctx.replyWithHTML(
+      const message =  ctx.replyWithHTML(
         `<b>Привет ${ctx.from.first_name ? ctx.from.first_name : "пользователь"} что вам подсказать 👇</b>`,
         keyboards.keyboard
       );
@@ -21,8 +20,8 @@ bot.command('start', async (ctx) => {
   });
 
 
-bot.hears('Контакты', async(ctx) => {
-        await ctx.replyWithHTML(`
+bot.hears('Контакты', (ctx) => {
+         ctx.replyWithHTML(`
         ⚡️Гудермесские ГЭС⚡️
 
 📍 Адрес: г.Гудермес, Школьная, 22
@@ -44,9 +43,9 @@ Keyboard.make([
 ]).reply())
 })
 
-bot.hears('Способы оплаты', async(ctx) =>{
+bot.hears('Способы оплаты', (ctx) =>{
 
-    await ctx.reply(`
+     ctx.reply(`
 ✅ В любом кассе АО "Чеченэнерго"
 
 ✅ В приложении вашего банка
@@ -55,18 +54,18 @@ bot.hears('Способы оплаты', async(ctx) =>{
     ['Программа для apple'],['Программа для android'],['⬅️ Меню']]).reply());
 });
 
-bot.hears('Программа для apple', async (ctx) => {
+bot.hears('Программа для apple',  (ctx) => {
     try {
-         await ctx.reply(
+          ctx.replyWithHTML(
             `https://clicks.su/9alOLV `)
     } catch (error) {
         console.log(error)
     }
 })
 
-bot.hears('Программа для android', async (ctx) => {
+bot.hears('Программа для android',  (ctx) => {
     try {
-         await ctx.reply(
+          ctx.reply(
             `https://clicks.su/y5Bkvd`)
     } catch (error) {
         console.log(error)
@@ -74,10 +73,10 @@ bot.hears('Программа для android', async (ctx) => {
 })
 
 
-bot.action('back_to_menu', (async ctx =>{
+bot.action('back_to_menu', ( ctx =>{
     try {
-        await ctx.answerCbQuery()
-        await ctx.replyWithHTML(
+         ctx.answerCbQuery()
+         ctx.replyWithHTML(
            `<b>${ctx.from.first_name
                ? ctx.from.first_name
                : "пользователь"} мы можем ответить на следующие ваши вопросы</b>`,
@@ -88,9 +87,9 @@ bot.action('back_to_menu', (async ctx =>{
 }))
 
 
-bot.hears('⬅️ Меню', async (ctx) => {
+bot.hears('⬅️ Меню',  (ctx) => {
     try {
-         await ctx.replyWithHTML(
+          ctx.replyWithHTML(
             `<b>${ctx.from.first_name
                 ? ctx.from.first_name
                 : "пользователь"} у вас остались вопросы по следующим пунктам?</b>`,
@@ -102,14 +101,14 @@ bot.hears('⬅️ Меню', async (ctx) => {
 
 
 
-bot.hears('Наш телеграмм', async(ctx) => {
-        await ctx.replyWithHTML(`Официальный канал в Телеграмм - https://t.me/gudermesGES`, 
+bot.hears('Наш телеграмм', (ctx) => {
+         ctx.replyWithHTML(`Официальный канал в Телеграмм - https://t.me/gudermesGES`, 
         Keyboard.make([['⬅️ Меню']]).reply())
 })
 
-bot.hears('Информация', async(ctx) =>{
+bot.hears('Информация', (ctx) =>{
 
-        await ctx.replyWithHTML(`Основные сведения по:`, Keyboard.make([
+         ctx.replyWithHTML(`Основные сведения по:`, Keyboard.make([
             ['Тариф'],
             ['Как снять показания с умного счетчика?'],
             ['Как зарегистрироваться в приложении?'],
@@ -118,9 +117,9 @@ bot.hears('Информация', async(ctx) =>{
     
 })
 
-bot.hears('Тариф', async(ctx) => {
+bot.hears('Тариф', (ctx) => {
     
-        await ctx.replyWithHTML(`
+     ctx.replyWithHTML(`
 Коммерция - уточняйте в ГЭС
 ~7,26 - НН  
 ~6,59 - СН-2  
